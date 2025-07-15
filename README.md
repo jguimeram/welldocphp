@@ -24,6 +24,7 @@ app/
   controllers/  # Request handlers
   core/         # Minimal framework classes
   models/       # Data access layer
+  services/     # Business logic and caching
   views/        # HTML templates
 index.php       # Entry point and route registration
 ```
@@ -40,9 +41,13 @@ index.php       # Entry point and route registration
 
 `HomeController` renders a simple welcome page. `ItemsController` provides CRUD actions for items via JSON responses.
 
+### Services
+
+The service layer encapsulates business logic. `ItemsService` optionally caches model data using implementations of `CacheInterface` such as `ArrayCache`.
+
 ### Models
 
-`ItemsModel` stores an in-memory list of items. It can be replaced with a database-backed model. `HomeModel` returns a welcome message for the home page.
+`ItemsModel` stores an in-memory list of items. `BaseModel` is a blueprint that provides common CRUD query methods for database-backed models. `HomeModel` returns a welcome message for the home page.
 
 ### Views
 
@@ -59,4 +64,4 @@ Located in `app/views`. The `home.php` template displays the message passed by t
 
 ## Extending
 
-Use the provided core classes as a starting point for a custom MVC application. Create additional controllers and views as needed, or update the models to use a database connection via the `Database` class.
+Use the provided core classes as a starting point for a custom MVC application. Create additional controllers and views as needed. Models can extend `BaseModel` to work with the `Database` class. Business logic can live in services and take advantage of optional caching.
