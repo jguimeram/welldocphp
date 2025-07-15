@@ -7,4 +7,7 @@ interface RequestInterface
     public function getUri(): string;
     public function getQueryParams(): array;
     public function getBody(): array;
+    public function setParams(array $params): void;
+    public function getParam(string $name): ?string;
+    public function getParams(): array;
 }

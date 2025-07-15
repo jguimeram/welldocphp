@@ -7,6 +7,7 @@ class Request implements RequestInterface
     private string $uri;
     private array $query;
     private array $body;
+    private array $params = [];
 
     public function __construct()
     {
@@ -34,5 +35,20 @@ class Request implements RequestInterface
     public function getBody(): array
     {
         return $this->body;
+    }
+
+    public function setParams(array $params): void
+    {
+        $this->params = $params;
+    }
+
+    public function getParam(string $name): ?string
+    {
+        return $this->params[$name] ?? null;
+    }
+
+    public function getParams(): array
+    {
+        return $this->params;
     }
 }
