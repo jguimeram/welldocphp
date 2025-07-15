@@ -5,6 +5,14 @@ namespace app\core;
 class Router
 {
     private array $routes = [];
+    private RequestFactory $requestFactory;
+    private ResponseFactory $responseFactory;
+
+    public function __construct(?RequestFactory $requestFactory = null, ?ResponseFactory $responseFactory = null)
+    {
+        $this->requestFactory = $requestFactory ?? new RequestFactory();
+        $this->responseFactory = $responseFactory ?? new ResponseFactory();
+    }
 
     public function get(string $pattern, callable $handler): void
     {
@@ -31,8 +39,11 @@ class Router
         $this->routes[$method][] = ['pattern' => $pattern, 'handler' => $handler];
     }
 
-    public function dispatch(RequestInterface $request, ResponseInterface $response): void
+    public function dispatch(): ResponseInterface
     {
+        $request = $this->requestFactory->create();
+        $response = $this->responseFactory->create();
+
         $method = $request->getMethod();
         $uri = rtrim($request->getUri(), '/');
         if ($uri === '') {
@@ -50,11 +61,12 @@ class Router
                 }
                 $request->setParams($params);
                 call_user_func($route['handler'], $request, $response);
-                return;
+                return $response;
             }
         }
 
         $response->setStatusCode(404);
         $response->setBody('Not Found');
+        return $response;
     }
 }

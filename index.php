@@ -1,14 +1,10 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-use app\core\Request;
-use app\core\Response;
 use app\core\Router;
 use app\controllers\HomeController;
 use app\controllers\ItemsController;
 
-$request = new Request();
-$response = new Response();
 $router = new Router();
 
 $home = new HomeController();
@@ -21,5 +17,6 @@ $router->post('/items', [$items, 'create']);
 $router->put('/items/{id}', [$items, 'update']);
 $router->delete('/items/{id}', [$items, 'delete']);
 
-$router->dispatch($request, $response);
+$response = $router->dispatch();
 $response->send();
+
