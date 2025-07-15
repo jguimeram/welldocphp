@@ -30,7 +30,8 @@ index.php       # Entry point and route registration
 
 ### Core components
 
-- **Router** – Minimal routing system supporting REST verbs.
+- **Router** – Minimal routing system supporting REST verbs. Internally it uses
+  factories to create immutable Request and Response objects.
 - **Request / Response** – Abstractions for HTTP requests and responses.
 - **View** – Renders PHP templates from the `views` directory.
 - **Database** – PDO-based singleton (not used by default). Modify models to use it for real databases.
