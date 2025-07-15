@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use app\core\Router;
 use app\controllers\HomeController;
@@ -19,4 +19,3 @@ $router->delete('/items/{id}', [$items, 'delete']);
 
 $response = $router->dispatch();
 $response->send();
-
