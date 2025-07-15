@@ -1,0 +1,11 @@
+{
+    "name": "welldoc/mvc",
+    "description": "Simple MVC project",
+    "type": "project",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    }
+}
