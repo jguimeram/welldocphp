@@ -1,7 +1,9 @@
 <?php
+
 namespace app\services;
 
 use app\models\ItemsModel;
+use app\services\CacheInterface;
 
 class ItemsService
 {
