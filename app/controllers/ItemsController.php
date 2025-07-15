@@ -4,26 +4,28 @@ namespace app\controllers;
 use app\core\RequestInterface;
 use app\core\ResponseInterface;
 use app\models\ItemsModel;
+use app\services\ItemsService;
+use app\services\ArrayCache;
 
 class ItemsController
 {
-    private ItemsModel $model;
+    private ItemsService $service;
 
-    public function __construct()
+    public function __construct(?ItemsService $service = null)
     {
-        $this->model = new ItemsModel();
+        $this->service = $service ?? new ItemsService(new ItemsModel(), new ArrayCache(), false);
     }
 
     public function index(RequestInterface $request, ResponseInterface $response): void
     {
-        $items = $this->model->all();
+        $items = $this->service->all();
         $response->setBody(json_encode($items));
     }
 
     public function show(RequestInterface $request, ResponseInterface $response): void
     {
         $id = (int)$request->getParam('id');
-        $item = $this->model->find($id);
+        $item = $this->service->find($id);
         if ($item) {
             $response->setBody(json_encode($item));
         } else {
@@ -34,7 +36,7 @@ class ItemsController
 
     public function create(RequestInterface $request, ResponseInterface $response): void
     {
-        $item = $this->model->create($request->getBody());
+        $item = $this->service->create($request->getBody());
         $response->setStatusCode(201);
         $response->setBody(json_encode($item));
     }
@@ -42,7 +44,7 @@ class ItemsController
     public function update(RequestInterface $request, ResponseInterface $response): void
     {
         $id = (int)$request->getParam('id');
-        $item = $this->model->update($id, $request->getBody());
+        $item = $this->service->update($id, $request->getBody());
         if ($item) {
             $response->setBody(json_encode($item));
         } else {
@@ -54,7 +56,7 @@ class ItemsController
     public function delete(RequestInterface $request, ResponseInterface $response): void
     {
         $id = (int)$request->getParam('id');
-        if ($this->model->delete($id)) {
+        if ($this->service->delete($id)) {
             $response->setStatusCode(204);
             $response->setBody('');
         } else {
