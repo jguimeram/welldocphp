@@ -1,25 +1,61 @@
 <?php
 namespace app\core;
 
+use function app\core\user_call_func;
+
 class Router
 {
+    private array $routes = [];
+
+    public function get(string $pattern, callable $handler): void
+    {
+        $this->addRoute('GET', $pattern, $handler);
+    }
+
+    public function post(string $pattern, callable $handler): void
+    {
+        $this->addRoute('POST', $pattern, $handler);
+    }
+
+    public function put(string $pattern, callable $handler): void
+    {
+        $this->addRoute('PUT', $pattern, $handler);
+    }
+
+    public function delete(string $pattern, callable $handler): void
+    {
+        $this->addRoute('DELETE', $pattern, $handler);
+    }
+
+    private function addRoute(string $method, string $pattern, callable $handler): void
+    {
+        $this->routes[$method][] = ['pattern' => $pattern, 'handler' => $handler];
+    }
+
     public function dispatch(RequestInterface $request, ResponseInterface $response): void
     {
-        $controllerName = ucfirst($request->getQueryParams()['controller'] ?? 'home');
-        $action = $request->getQueryParams()['action'] ?? 'index';
-        $controllerClass = 'app\\controllers\\' . $controllerName . 'Controller';
+        $method = $request->getMethod();
+        $uri = rtrim($request->getUri(), '/');
+        if ($uri === '') {
+            $uri = '/';
+        }
 
-        if (class_exists($controllerClass)) {
-            $controller = new $controllerClass();
-            if (method_exists($controller, $action)) {
-                $controller->$action();
+        foreach ($this->routes[$method] ?? [] as $route) {
+            $pattern = '#^' . preg_replace('/\{(\w+)\}/', '(?P<$1>[^/]+)', $route['pattern']) . '$#';
+            if (preg_match($pattern, $uri, $matches)) {
+                $params = [];
+                foreach ($matches as $key => $value) {
+                    if (!is_int($key)) {
+                        $params[$key] = $value;
+                    }
+                }
+                $request->setParams($params);
+                user_call_func($route['handler'], $request, $response);
                 return;
             }
-            $response->setStatusCode(404);
-            $response->setBody('Action not found');
-            return;
         }
+
         $response->setStatusCode(404);
-        $response->setBody('Controller not found');
+        $response->setBody('Not Found');
     }
 }
