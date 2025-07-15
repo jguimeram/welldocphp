@@ -1,7 +1,6 @@
 <?php
 namespace app\core;
 
-use function app\core\user_call_func;
 
 class Router
 {
@@ -50,7 +49,7 @@ class Router
                     }
                 }
                 $request->setParams($params);
-                user_call_func($route['handler'], $request, $response);
+                call_user_func($route['handler'], $request, $response);
                 return;
             }
         }
