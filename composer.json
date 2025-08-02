@@ -1,11 +1,17 @@
 {
-    "name": "welldoc/mvc",
-    "description": "Simple MVC project",
-    "type": "project",
-    "require": {},
-    "autoload": {
-        "psr-4": {
-            "app\\": "app/"
-        }
+  "name": "welldoc/mvc",
+  "description": "Simple MVC project",
+  "scripts": {
+    "dev": "php -S localhost:8000 -t public"
+  },
+  "config": {
+    "process-timeout": 0
+  },
+  "type": "project",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "app\\": "app/"
     }
+  }
 }
