@@ -4,6 +4,9 @@ require __DIR__ . '/../vendor/autoload.php';
 use app\core\Router;
 use app\controllers\HomeController;
 use app\controllers\ItemsController;
+codex/add-blueprint-class-for-model-layer
+
+$router = new Router();
 use app\middleware\AuthMiddleware;
 use app\middleware\CorsMiddleware;
 use app\middleware\LoggingMiddleware;
