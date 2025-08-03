@@ -7,6 +7,7 @@ class Request implements RequestInterface
     private string $uri;
     private array $query;
     private array $body;
+    private array $headers;
     private array $params = [];
 
     public function __construct()
@@ -15,6 +16,7 @@ class Request implements RequestInterface
         $this->uri = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
         $this->query = $_GET;
         $this->body = $_POST;
+        $this->headers = function_exists('getallheaders') ? getallheaders() : [];
     }
 
     public function getMethod(): string
@@ -35,6 +37,16 @@ class Request implements RequestInterface
     public function getBody(): array
     {
         return $this->body;
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    public function getHeader(string $name): ?string
+    {
+        return $this->headers[$name] ?? null;
     }
 
     public function setParams(array $params): void
