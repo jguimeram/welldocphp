@@ -35,6 +35,7 @@ index.php       # Entry point and route registration
 - **Request / Response** – Abstractions for HTTP requests and responses.
 - **View** – Renders PHP templates from the `views` directory.
 - **Database** – PDO-based singleton (not used by default). Modify models to use it for real databases.
+- **Middleware** – Pipeline for cross-cutting concerns like logging, CORS, and auth.
 
 ### Controllers
 
@@ -47,6 +48,16 @@ index.php       # Entry point and route registration
 ### Views
 
 Located in `app/views`. The `home.php` template displays the message passed by the controller.
+
+### Middleware
+
+Middleware lives in `app/middleware` and is executed before route handlers. The default stack includes:
+
+- `LoggingMiddleware` – logs each request method and path.
+- `CorsMiddleware` – adds CORS headers and handles preflight `OPTIONS` requests.
+- `AuthMiddleware` – checks for an `Authorization: Bearer secret` header and rejects unauthorized requests.
+
+Register additional middleware in `public/index.php` using `$router->addMiddleware()`.
 
 ## API endpoints
 

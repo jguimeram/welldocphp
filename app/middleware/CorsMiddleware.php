@@ -5,6 +5,9 @@ use app\core\MiddlewareInterface;
 use app\core\RequestInterface;
 use app\core\ResponseInterface;
 
+/**
+ * Adds CORS headers and short-circuits preflight `OPTIONS` requests.
+ */
 class CorsMiddleware implements MiddlewareInterface
 {
     public function handle(RequestInterface $request, ResponseInterface $response, callable $next): void
