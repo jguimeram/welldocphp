@@ -4,8 +4,14 @@ require __DIR__ . '/../vendor/autoload.php';
 use app\core\Router;
 use app\controllers\HomeController;
 use app\controllers\ItemsController;
+use app\middleware\AuthMiddleware;
+use app\middleware\CorsMiddleware;
+use app\middleware\LoggingMiddleware;
 
 $router = new Router();
+$router->addMiddleware(new LoggingMiddleware());
+$router->addMiddleware(new CorsMiddleware());
+$router->addMiddleware(new AuthMiddleware());
 
 $home = new HomeController();
 $items = new ItemsController();

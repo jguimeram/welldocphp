@@ -5,6 +5,7 @@ namespace app\core;
 class Router
 {
     private array $routes = [];
+    private array $middlewares = [];
     private RequestFactory $requestFactory;
     private ResponseFactory $responseFactory;
 
@@ -12,6 +13,11 @@ class Router
     {
         $this->requestFactory = $requestFactory ?? new RequestFactory();
         $this->responseFactory = $responseFactory ?? new ResponseFactory();
+    }
+
+    public function addMiddleware(MiddlewareInterface $middleware): void
+    {
+        $this->middlewares[] = $middleware;
     }
 
     public function get(string $pattern, callable $handler): void
@@ -60,7 +66,14 @@ class Router
                     }
                 }
                 $request->setParams($params);
-                call_user_func($route['handler'], $request, $response);
+                $handler = $route['handler'];
+                foreach (array_reverse($this->middlewares) as $middleware) {
+                    $next = $handler;
+                    $handler = function ($req, $res) use ($middleware, $next) {
+                        $middleware->handle($req, $res, $next);
+                    };
+                }
+                call_user_func($handler, $request, $response);
                 return $response;
             }
         }
